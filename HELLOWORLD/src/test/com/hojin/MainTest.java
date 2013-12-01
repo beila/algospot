@@ -1,20 +1,26 @@
-package test.com.hojin; 
+package test.com.hojin;
 
-import org.junit.Test; 
-import org.junit.Before; 
-import org.junit.After; 
+import com.hojin.Main;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static junit.framework.Assert.assertEquals;
 
 /** 
 * Main Tester. 
 * 
 * @author <Authors name> 
-* @since <pre>7¿ù 6, 2013</pre> 
+* @since <pre>7ï¿½ï¿½ 6, 2013</pre> 
 * @version 1.0 
 */ 
-public class MainTest { 
+public class MainTest {
 
-@Before
-public void before() throws Exception { 
+    private Main main;
+
+    @Before
+public void before() throws Exception {
+    main = new Main();
 } 
 
 @After
@@ -37,9 +43,9 @@ public void testMain() throws Exception {
 * 
 */ 
 @Test
-public void testMainOne() throws Exception { 
-//TODO: Test goes here... 
-} 
+public void testMainOneSample1() throws Exception {
+    assertEquals(main.mainOne("World"), "Hello, World!");
+}
 
 
 } 
