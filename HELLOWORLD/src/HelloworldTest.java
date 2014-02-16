@@ -3,8 +3,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.ArrayDeque;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -68,17 +68,15 @@ public void testMain() throws Exception {
 
     try (BufferedReader readerForOutput = new BufferedReader(
             new InputStreamReader(new ByteArrayInputStream(buf)))) {
-        Collection<String> cs = new ArrayDeque<>();
+        List<String> results = new ArrayList<>();
         String line = readerForOutput.readLine();
         while (null != line) {
-            cs.add(line);
+            results.add(line);
             line = readerForOutput.readLine();
         }
-        assertEquals(5, cs.size());
-        int i = 0;
-        for (String result: cs) {
-            assertEquals(EXPECTED_OUTPUT[i], result);
-            ++i;
+        assertEquals(EXPECTED_OUTPUT.length, results.size());
+        for (int i = 0; i < EXPECTED_OUTPUT.length; ++i) {
+            assertEquals(EXPECTED_OUTPUT[i], results.get(i));
         }
     }
 }
