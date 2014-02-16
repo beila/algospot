@@ -1,6 +1,3 @@
-package test.com.hojin;
-
-import com.hojin.Main;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +15,7 @@ import static junit.framework.Assert.assertEquals;
 * @since <pre>7�� 6, 2013</pre> 
 * @version 1.0 
 */ 
-public class MainTest {
+public class HelloworldTest {
 
     private Main main;
 
