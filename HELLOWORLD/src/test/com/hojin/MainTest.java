@@ -5,10 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -22,21 +19,15 @@ import static junit.framework.Assert.assertEquals;
 public class MainTest {
 
     private Main main;
-    private InputStream systemInputStream;
-    private PrintStream systemOutputStream;
 
     @Before
 public void before() throws Exception {
-        systemInputStream = System.in;
-        systemOutputStream = System.out;
         main = new Main();
 } 
 
 @After
 public void after() throws Exception {
-    System.setIn(systemInputStream);
-    System.setOut(systemOutputStream);
-} 
+}
 
 /** 
 * 
@@ -45,11 +36,34 @@ public void after() throws Exception {
 */ 
 @Test
 public void testMain() throws Exception {
-    System.setIn(new ByteArrayInputStream("5\n1\n2\n3\n4\n5\n".getBytes()));
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(out));
-    Main.main(new String[]{});
-    //TODO assert out has 5 lines
+    byte[] buf;
+    try (StringWriter stringOutForInput = new StringWriter()) {
+        stringOutForInput.write(String.format("%s%n", "5"));
+        stringOutForInput.write(String.format("%s%n", "1"));
+        stringOutForInput.write(String.format("%s%n", "2"));
+        stringOutForInput.write(String.format("%s%n", "3"));
+        stringOutForInput.write(String.format("%s%n", "4"));
+        stringOutForInput.write(String.format("%s%n", "5"));
+        buf = stringOutForInput.getBuffer().toString().getBytes();
+    }
+
+    try (ByteArrayInputStream byteIn = new ByteArrayInputStream(buf);
+         ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+         PrintStream out = new PrintStream(byteOut)) {
+        Main.main(new String[]{}, byteIn, out);
+        buf = byteOut.toByteArray();
+    }
+
+    try (LineNumberReader inForOutput = new LineNumberReader(
+            new InputStreamReader(new ByteArrayInputStream(buf)))) {
+        String s;
+        int numLines = -1;
+        do {
+            numLines++;
+            s = inForOutput.readLine();
+        } while (null != s);
+        assertEquals(5, numLines);
+    }
 }
 
 /** 

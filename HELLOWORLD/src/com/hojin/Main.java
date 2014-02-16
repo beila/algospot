@@ -1,6 +1,6 @@
 package com.hojin;
 
-import java.io.IOException;
+import java.io.*;
 
 /**
  * http://algospot.com/judge/problem/read/HELLOWORLD
@@ -8,19 +8,19 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        byte[] input = new byte[10];
-        //noinspection ResultOfMethodCallIgnored
-        System.in.read(input);
-        final int round = parseInt(input);
-        for (int i = 0; i < round; ++i) {
-            //noinspection ResultOfMethodCallIgnored
-            System.in.read(input);
-            System.out.println(new Main().mainOne(new String(input)));
-        }
+        main(args, System.in, System.out);
     }
 
-    private static int parseInt(byte[] input) {
-        return Integer.valueOf(new String(input));
+    public static void main(@SuppressWarnings("UnusedParameters") String[] args, InputStream in, PrintStream out) throws IOException {
+        final Main main = new Main();
+        try (BufferedReader d = new BufferedReader(new InputStreamReader(in))) {
+            String line = d.readLine();
+            final int round = Integer.valueOf(line);
+            for (int i = 0; i < round; ++i) {
+                line = d.readLine();
+                out.println(main.mainOne(line));
+            }
+        }
     }
 
     public String mainOne(String arg) {
