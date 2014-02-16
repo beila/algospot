@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.ArrayDeque;
+import java.util.Collection;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -36,14 +38,27 @@ public void after() throws Exception {
 */ 
 @Test
 public void testMain() throws Exception {
+    final String[] USER_INPUT = new String[] {
+            "5",
+            "World",
+            "Algospot",
+            "Illu",
+            "Jullu",
+            "Kodori",
+    };
+    final String[] EXPECTED_OUTPUT = new String[] {
+            "Hello, World!",
+            "Hello, Algospot!",
+            "Hello, Illu!",
+            "Hello, Jullu!",
+            "Hello, Kodori!",
+    };
+
     byte[] buf;
     try (StringWriter stringOutForInput = new StringWriter()) {
-        stringOutForInput.write(String.format("%s%n", "5"));
-        stringOutForInput.write(String.format("%s%n", "1"));
-        stringOutForInput.write(String.format("%s%n", "2"));
-        stringOutForInput.write(String.format("%s%n", "3"));
-        stringOutForInput.write(String.format("%s%n", "4"));
-        stringOutForInput.write(String.format("%s%n", "5"));
+        for(String ui: USER_INPUT) {
+            stringOutForInput.write(String.format("%s%n", ui));
+        }
         buf = stringOutForInput.getBuffer().toString().getBytes();
     }
 
@@ -54,15 +69,20 @@ public void testMain() throws Exception {
         buf = byteOut.toByteArray();
     }
 
-    try (LineNumberReader inForOutput = new LineNumberReader(
+    try (BufferedReader readerForOutput = new BufferedReader(
             new InputStreamReader(new ByteArrayInputStream(buf)))) {
-        String s;
-        int numLines = -1;
-        do {
-            numLines++;
-            s = inForOutput.readLine();
-        } while (null != s);
-        assertEquals(5, numLines);
+        Collection<String> cs = new ArrayDeque<>();
+        String line = readerForOutput.readLine();
+        while (null != line) {
+            cs.add(line);
+            line = readerForOutput.readLine();
+        }
+        assertEquals(5, cs.size());
+        int i = 0;
+        for (String result: cs) {
+            assertEquals(EXPECTED_OUTPUT[i], result);
+            ++i;
+        }
     }
 }
 
