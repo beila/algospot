@@ -51,13 +51,7 @@ public void testMain() throws Exception {
             "Hello, Kodori!",
     };
 
-    byte[] buf;
-    try (StringWriter stringOutForInput = new StringWriter()) {
-        for(String ui: USER_INPUT) {
-            stringOutForInput.write(String.format("%s%n", ui));
-        }
-        buf = stringOutForInput.getBuffer().toString().getBytes();
-    }
+    byte[] buf = TestLib.getBytes(USER_INPUT);
 
     try (ByteArrayInputStream byteIn = new ByteArrayInputStream(buf);
          ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
@@ -81,7 +75,7 @@ public void testMain() throws Exception {
     }
 }
 
-/** 
+    /**
 * 
 * Method: mainOne(String arg) 
 * 
