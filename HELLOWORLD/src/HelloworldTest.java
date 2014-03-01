@@ -2,10 +2,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
 import static junit.framework.Assert.assertEquals;
 
 /** 
@@ -51,28 +47,14 @@ public void testMain() throws Exception {
             "Hello, Kodori!",
     };
 
-    byte[] buf = TestLib.getBytes(USER_INPUT);
+    String[] results;
 
-    try (ByteArrayInputStream byteIn = new ByteArrayInputStream(buf);
-         ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-         PrintStream out = new PrintStream(byteOut)) {
-        Main.main(new String[]{}, byteIn, out);
-        buf = byteOut.toByteArray();
+    try (StringArrayInputOutput io = new StringArrayInputOutput(USER_INPUT)) {
+        Main.main(new String[]{}, io.getInputStream(), io.getPrintStream());
+        results = io.getResults();
     }
 
-    try (BufferedReader readerForOutput = new BufferedReader(
-            new InputStreamReader(new ByteArrayInputStream(buf)))) {
-        List<String> results = new ArrayList<>();
-        String line = readerForOutput.readLine();
-        while (null != line) {
-            results.add(line);
-            line = readerForOutput.readLine();
-        }
-        assertEquals(EXPECTED_OUTPUT.length, results.size());
-        for (int i = 0; i < EXPECTED_OUTPUT.length; ++i) {
-            assertEquals(EXPECTED_OUTPUT[i], results.get(i));
-        }
-    }
+    Lib.assertDeepEquals(EXPECTED_OUTPUT, results);
 }
 
     /**

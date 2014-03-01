@@ -3,7 +3,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class MainTest {
-    static String FIRST_BOARD = TestLib.getString(
+    static String FIRST_BOARD = Lib.getLinedString(
             "URLPM",
             "XPRET",
             "GIAET",

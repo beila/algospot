@@ -1,12 +1,11 @@
 import java.io.IOException;
 import java.io.StringWriter;
 
-public class TestLib {
-    static public byte[] getBytes(String... input) {
-        return getString(input).getBytes();
-    }
+import static junit.framework.Assert.assertEquals;
 
-    static public String getString(String... input) {
+public class Lib {
+
+    static public String getLinedString(String... input) {
         try {
             try (StringWriter stringOutForInput = new StringWriter()) {
                 for(String ui: input) {
@@ -18,5 +17,12 @@ public class TestLib {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static void assertDeepEquals(String[] expected, String[] actual) {
+        assertEquals(expected.length, actual.length);
+        for (int i = 0; i < expected.length; ++i) {
+            assertEquals(expected[i], actual[i]);
+        }
     }
 }
