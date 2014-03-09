@@ -31,30 +31,6 @@ public class Main {
         }
     }
 
-    // TODO no default constructor
-    public Main() {
-    }
-
-    public static void main(String[] args) throws IOException {
-        main(args, System.in, System.out);
-    }
-
-    public static void main(@SuppressWarnings("UnusedParameters") String[] args, InputStream in, PrintStream out) throws IOException {
-        try (BufferedReader d = new BufferedReader(new InputStreamReader(in))) {
-            String line = d.readLine();
-            final int round = Integer.valueOf(line);
-            for (int i = 0; i < round; ++i) {
-                final Main main = new Main();
-                line = d.readLine();
-                out.println(main.mainOne(line));
-            }
-        }
-    }
-
-    public String mainOne(String arg) {
-        return "Hello, " + arg + "!";
-    }
-
     public boolean findString(String s) {
         return findStringFromPlaces(ALL_PLACES, s, s);
     }
@@ -98,6 +74,50 @@ public class Main {
                     new Place(x-0,y+1),
                     new Place(x+1,y+1)
             );
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        main(args, System.in, System.out);
+    }
+
+    public static void main(@SuppressWarnings("UnusedParameters") String[] args, InputStream in, PrintStream out) throws IOException {
+        try (BufferedReader d = new BufferedReader(new InputStreamReader(in))) {
+            final int round = Integer.valueOf(d.readLine());
+            final Main[] mains = buildMains(d, round);
+
+            final int numStrings = Integer.valueOf(d.readLine());
+            final String[] strings = buildStrings(d, numStrings);
+
+            for (Main main: mains) {
+                main.run(out, strings);
+            }
+        }
+    }
+
+    private static Main[] buildMains(BufferedReader d, int round) throws IOException {
+        final Main[] mains = new Main[round];
+        for (int i = 0; i < round; ++i) {
+            String[] boardLines = new String[BOARD_SIZE];
+            for (int j = 0; j < BOARD_SIZE; ++j) {
+                boardLines[j] = d.readLine();
+            }
+            mains[i] = new Main(Lib.getLinedString(boardLines));
+        }
+        return mains;
+    }
+
+    private static String[] buildStrings(BufferedReader d, int numStrings) throws IOException {
+        String[] strings = new String[numStrings];
+        for (int i = 0; i < numStrings; ++i) {
+            strings[i] = d.readLine();
+        }
+        return strings;
+    }
+
+    private void run(PrintStream out, String[] strings) {
+        for (String s: strings) {
+            out.println(s + (findString(s)? " YES": " NO"));
         }
     }
 }
