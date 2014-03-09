@@ -1,46 +1,34 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * http://algospot.com/judge/problem/read/BOGGLE
  */
 public class Main {
     private static final int BOARD_SIZE = 5;
-    private static final Collection<Place> ALL_PLACES;
-    static {
-        Collection<Place> allPlaces = new ArrayList<>();
-        for (int i = 1; i <= BOARD_SIZE; ++i)
-            for (int j = 1; j <= BOARD_SIZE; ++j)
-                allPlaces.add(new Place(i, j));
-        ALL_PLACES = Collections.unmodifiableCollection(allPlaces);
-    }
 
-    char[][] board = new char[BOARD_SIZE+2][BOARD_SIZE+2];
-    { for (char[] b: board) Arrays.fill(b, '*'); }
+    char[][] board = new char[BOARD_SIZE][BOARD_SIZE];
 
     public Main(String boggle) throws IOException {
         try (BufferedReader d = new BufferedReader(new StringReader(boggle))) {
-            for (int i = 1; i <= BOARD_SIZE; ++i) {
+            for (int i = 0; i < BOARD_SIZE; ++i) {
                 String line = d.readLine();
-                for (int j = 1; j <= BOARD_SIZE; ++j)
-                    board[i][j] = line.charAt(j-1);
+                for (int j = 0; j < BOARD_SIZE; ++j)
+                    board[i][j] = line.charAt(j);
             }
         }
     }
     
     public Main(String[] boggle) {
-        for (int i = 1; i <= BOARD_SIZE ; ++i) {
-            for (int j = 1; j <= BOARD_SIZE; j++) {
-                board[i][j] = boggle[i-1].charAt(j-1);
+        for (int i = 0; i < BOARD_SIZE ; ++i) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                board[i][j] = boggle[i].charAt(j);
             }
         }
     }
 
     public boolean findString(String s) {
-        return findStringFromPlaces(ALL_PLACES, s, s);
+        return findStringFromPlaces(Place.ALL_PLACES, s, s);
     }
 
     public boolean findStringFromPlaces(Collection<Place> places, String s, String word) {
@@ -62,6 +50,12 @@ public class Main {
     }
 
     static class Place {
+        private static final List<Place> ALL_PLACES;
+        static {
+            ALL_PLACES = Collections.unmodifiableList(
+                    buildPlaces(BOARD_SIZE, BOARD_SIZE));
+        }
+
         Place(int x, int y) {
             this.x = x;
             this.y = y;
@@ -69,20 +63,55 @@ public class Main {
 
         final int x;
         final int y;
+        private Collection<Place> neighbors;
 
         public Collection<Place> neighbors() {
-            //noinspection PointlessArithmeticExpression
-            return Arrays.asList(
-                    new Place(x-1,y-1),
-                    new Place(x-0,y-1),
-                    new Place(x+1,y-1),
-                    new Place(x-1,y-0),
-                    new Place(x+1,y-0),
-                    new Place(x-1,y+1),
-                    new Place(x-0,y+1),
-                    new Place(x+1,y+1)
-            );
+            return neighbors;
         }
+
+        static private int buildKey(int x, int y) {
+            if (x < 0 || x >= BOARD_SIZE) return -1;
+            if (y < 0 || y >= BOARD_SIZE) return -1;
+            return x * BOARD_SIZE + y;
+        }
+
+        @SuppressWarnings("PointlessArithmeticExpression")
+        private Set<Integer> buildNeighborKeys() {
+            Set<Integer> keys = new HashSet<>();
+            keys.add(buildKey(x - 1, y - 1));
+            keys.add(buildKey(x - 0, y - 1));
+            keys.add(buildKey(x + 1, y - 1));
+            keys.add(buildKey(x - 1, y - 0));
+            keys.add(buildKey(x + 1, y - 0));
+            keys.add(buildKey(x - 1, y + 1));
+            keys.add(buildKey(x - 0, y + 1));
+            keys.add(buildKey(x + 1, y + 1));
+            keys.remove(-1);
+            return keys;
+        }
+
+        private Collection<Place> buildNeighborsFrom(List<Place> allPlaces) {
+            final Set<Integer> neighborKeys = buildNeighborKeys();
+            Collection<Place> places = new ArrayList<>(neighborKeys.size());
+            for (int i: neighborKeys) {
+                places.add(allPlaces.get(i));
+            }
+            return places;
+        }
+
+        private static List<Place> buildPlaces(int xSize, int ySize) {
+            final List<Place> places = new ArrayList<>(xSize*ySize);
+            for (int i = 0; i < xSize; ++i)
+                for (int j = 0; j < ySize; ++j)
+                    places.add(buildKey(i, j), new Place(i, j));
+
+            for (Place p: places) {
+                p.neighbors = p.buildNeighborsFrom(places);
+            }
+
+            return places;
+        }
+
     }
 
     public static void main(String[] args) throws IOException {
