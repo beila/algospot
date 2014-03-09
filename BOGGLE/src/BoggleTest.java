@@ -1,12 +1,21 @@
 import com.beila.testlib.Lib;
 import com.beila.testlib.StringArrayInputOutput;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class MainTest {
+public class BoggleTest {
+
+    @Rule
+    public Timeout globalTimeout = new Timeout(10000);
+
     @SuppressWarnings("SpellCheckingInspection")
     static String FIRST_BOARD = Lib.getLinedString(
             "URLPM",
@@ -194,6 +203,32 @@ public class MainTest {
         @SuppressWarnings("SpellCheckingInspection")
         String[] output = new String[] {"AAAAAAAAAB" + " NO"};
         assertMain(input, output);
+    }
+
+    @Test
+    public void testBiggestProblem() throws Exception {
+        final int repBoards = 50;
+        List<String> inputList = new ArrayList<>();
+        inputList.add(String.valueOf(repBoards));
+        for (int i = 0; i < repBoards; i++) {
+            for (int j = 0; j < 5; j++) {
+                //noinspection SpellCheckingInspection
+                inputList.add("AAAAA");
+            }
+        }
+
+        final int repWords = 10;
+        inputList.add(String.valueOf(repWords));
+        for (int i = 0; i < repWords; i++) {
+            //noinspection SpellCheckingInspection
+            inputList.add("AAAAAAAAAB");
+        }
+
+        String[] output = new String[repBoards*repWords];
+        //noinspection SpellCheckingInspection
+        Arrays.fill(output, "AAAAAAAAAB NO");
+
+        assertMain(inputList.toArray(new String[inputList.size()]), output);
     }
 
     public static void assertMain(String[] input, String[] output) throws IOException {
