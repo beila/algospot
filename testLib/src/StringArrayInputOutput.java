@@ -23,7 +23,7 @@ public class StringArrayInputOutput implements Closeable {
         return printStream;
     }
 
-    public String[] getResults() throws IOException {
+    public String[] toStringArray() throws IOException {
         ArrayList<String> results = new ArrayList<>();
         String line;
         try (BufferedReader readerForOutput = new BufferedReader(new InputStreamReader(

@@ -47,14 +47,11 @@ public void testMain() throws Exception {
             "Hello, Kodori!",
     };
 
-    String[] results;
-
     try (StringArrayInputOutput io = new StringArrayInputOutput(USER_INPUT)) {
         Main.main(new String[]{}, io.getInputStream(), io.getPrintStream());
-        results = io.getResults();
+        Lib.assertDeepEquals(EXPECTED_OUTPUT, io.toStringArray());
     }
 
-    Lib.assertDeepEquals(EXPECTED_OUTPUT, results);
 }
 
     /**
