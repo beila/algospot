@@ -135,7 +135,7 @@ public class BoggleTest {
 
     @Test
     public void testManyBoards() throws Exception {
-        final int reps = 100_000;
+        final int reps = 50;
         StringBuilder USER_INPUT = new StringBuilder();
         USER_INPUT.append(Lib.getLinedString(String.valueOf(reps)));
         for (int i = 0; i < reps; i++) {
@@ -155,7 +155,7 @@ public class BoggleTest {
 
     @Test
     public void testManyWords() throws Exception {
-        final int reps = 100_000;
+        final int reps = 10;
         StringBuilder input = new StringBuilder();
         input.append(Lib.getLinedString("1"));
         input.append(FIRST_BOARD);
