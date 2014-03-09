@@ -1,3 +1,5 @@
+import com.beila.testlib.Lib;
+import com.beila.testlib.StringArrayInputOutput;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

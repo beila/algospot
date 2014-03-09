@@ -1,3 +1,5 @@
+package com.beila.testlib;
+
 import java.io.IOException;
 import java.io.StringWriter;
 

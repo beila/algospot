@@ -1,3 +1,5 @@
+import com.beila.testlib.Lib;
+import com.beila.testlib.StringArrayInputOutput;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +33,7 @@ public void after() throws Exception {
 */ 
 @Test
 public void testMain() throws Exception {
-    final String[] USER_INPUT = new String[] {
+    @SuppressWarnings("SpellCheckingInspection") final String[] USER_INPUT = new String[] {
             "5",
             "World",
             "Algospot",
@@ -39,7 +41,7 @@ public void testMain() throws Exception {
             "Jullu",
             "Kodori",
     };
-    final String[] EXPECTED_OUTPUT = new String[] {
+    @SuppressWarnings("SpellCheckingInspection") final String[] EXPECTED_OUTPUT = new String[] {
             "Hello, World!",
             "Hello, Algospot!",
             "Hello, Illu!",

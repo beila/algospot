@@ -30,6 +30,14 @@ public class Main {
             }
         }
     }
+    
+    public Main(String[] boggle) {
+        for (int i = 1; i <= BOARD_SIZE ; ++i) {
+            for (int j = 1; j <= BOARD_SIZE; j++) {
+                board[i][j] = boggle[i-1].charAt(j-1);
+            }
+        }
+    }
 
     public boolean findString(String s) {
         return findStringFromPlaces(ALL_PLACES, s, s);
@@ -102,7 +110,7 @@ public class Main {
             for (int j = 0; j < BOARD_SIZE; ++j) {
                 boardLines[j] = d.readLine();
             }
-            mains[i] = new Main(Lib.getLinedString(boardLines));
+            mains[i] = new Main(boardLines);
         }
         return mains;
     }
