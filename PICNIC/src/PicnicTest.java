@@ -1,7 +1,12 @@
+import com.beila.testlib.Lib;
+import com.beila.testlib.StringArrayInputOutput;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
+
+import java.io.IOException;
 
 /**
  * http://algospot.com/judge/problem/read/PICNIC
@@ -82,4 +87,29 @@ public class PicnicTest {
         main.countPairingCases();
     }
 
+    public static void assertMain(String[] input, String[] output) throws IOException {
+        try (StringArrayInputOutput io = new StringArrayInputOutput(input)) {
+            Main.main(new String[]{}, io.getInputStream(), io.getPrintStream());
+            Lib.assertDeepEquals(output, io.toStringArray());
+        }
+    }
+
+    @Test
+    public void testGivenExample() throws Exception {
+        String[] input = new String[] {
+                "3",
+                "2 1",
+                "0 1",
+                "4 6",
+                "0 1 1 2 2 3 3 0 0 2 1 3",
+                "6 10",
+                "0 1 0 2 1 2 1 3 1 4 2 3 2 4 3 4 3 5 4 5",
+        };
+        String[] output = new String[] {
+                "1",
+                "3",
+                "4",
+        };
+        assertMain(input, output);
+    }
 }

@@ -1,4 +1,8 @@
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 
 /**
@@ -89,6 +93,34 @@ public class Main {
             System.out.println(sb.toString());
         }
         System.out.println();
+    }
+
+    public static void main(String[] args) {
+        main(args, System.in, System.out);
+    }
+
+    public static void main(@SuppressWarnings("UnusedParameters") String[] args,
+                            InputStream inputStream, PrintStream printStream) {
+        Scanner scanner = new Scanner(inputStream);
+        int cases = scanner.nextInt();
+        for (int i = 0; i < cases; i++) {
+            int students = scanner.nextInt();
+            boolean[][] friends = new boolean[students][students];
+            for (boolean[] ba: friends) {
+                Arrays.fill(ba, false);
+            }
+
+            int pairs = scanner.nextInt();
+            for (int j = 0; j < pairs; j++) {
+                int friend1 = scanner.nextInt();
+                int friend2 = scanner.nextInt();
+                friends[friend1][friend2] = true;
+                friends[friend2][friend1] = true;
+            }
+
+            Main main = new Main(friends);
+            printStream.println(main.countPairingCases());
+        }
     }
 
 }
