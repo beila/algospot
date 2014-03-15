@@ -34,42 +34,28 @@ public class Main {
 
     private int countPairingCases(Set<Integer> people, Set<Integer> freeSeats, int[] seats) {
         if (people.size() <= 0) {
-            return checkValidPairs(seats)? 1: 0;
+            return 1;
         }
 
         int sum = 0;
+        int seat = freeSeats.iterator().next();
         for (Integer person: people) {
-            int seat = freeSeats.iterator().next();
+            if (!areFriends[person][seat]) continue;
+
             seats[seat] = person;
             seats[person] = seat;
+
             Set<Integer> lessPeople = new HashSet<>(people);
             lessPeople.remove(person);
             lessPeople.remove(seat);
+
             Set<Integer> lessFreeSeats = new HashSet<>(freeSeats);
             lessFreeSeats.remove(person);
             lessFreeSeats.remove(seat);
+
             sum += countPairingCases(lessPeople, lessFreeSeats, seats);
         }
         return sum;
-    }
-
-    private boolean checkValidPairs(int[] seats) {
-        return checkPairedToMany(seats)
-                && checkPairOfNonFriends(seats);
-    }
-
-    private boolean checkPairedToMany(int[] seats) {
-        for (int i = 0; i < seats.length; i++) {
-            if (i != seats[seats[i]]) return false;
-        }
-        return true;
-    }
-
-    private boolean checkPairOfNonFriends(int[] seats) {
-        for (int i = 0; i < seats.length; i++) {
-            if (!areFriends[i][seats[i]]) return false;
-        }
-        return true;
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -96,11 +82,10 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        main(args, System.in, System.out);
+        main(System.in, System.out);
     }
 
-    public static void main(@SuppressWarnings("UnusedParameters") String[] args,
-                            InputStream inputStream, PrintStream printStream) {
+    static void main(InputStream inputStream, PrintStream printStream) {
         Scanner scanner = new Scanner(inputStream);
         int cases = scanner.nextInt();
         for (int i = 0; i < cases; i++) {

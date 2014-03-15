@@ -89,7 +89,7 @@ public class PicnicTest {
 
     public static void assertMain(String[] input, String[] output) throws IOException {
         try (StringArrayInputOutput io = new StringArrayInputOutput(input)) {
-            Main.main(new String[]{}, io.getInputStream(), io.getPrintStream());
+            Main.main(io.getInputStream(), io.getPrintStream());
             Lib.assertDeepEquals(output, io.toStringArray());
         }
     }
