@@ -40,11 +40,53 @@ public class Main {
     }
 
     private boolean isValidPairs(int[] seats) {
+        return checkPairedToMyself(seats)
+                && checkPairedToMany(seats)
+                && checkPairOfNonFriends(seats);
+    }
+
+    private boolean checkPairedToMany(int[] seats) {
         for (int i = 0; i < seats.length; i++) {
-            if (seats[i] == i) return false;
+            if (i != seats[seats[i]]) return false;
+        }
+        return true;
+    }
+
+    private boolean checkPairOfNonFriends(int[] seats) {
+        for (int i = 0; i < seats.length; i++) {
             if (!areFriends[i][seats[i]]) return false;
         }
         return true;
+    }
+
+    private boolean checkPairedToMyself(int[] seats) {
+        for (int i = 0; i < seats.length; i++) {
+            if (seats[i] == i) return false;
+        }
+        return true;
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    private void printHighlighted(int[] seats, int highlight) {
+        StringBuilder sb = new StringBuilder();
+        String pad;
+        for (int i = 0; i < seats.length; ++i) {
+            sb.delete(0, sb.length());
+            for (int j = 0; j < seats.length; ++j) {
+                pad = highlight == i && j == seats[i] ? "*" : " ";
+                sb.append(pad).append(j == seats[i]? "P": ".").append(pad);
+            }
+            System.out.println(sb.toString());
+        }
+        for (int i = 0; i < areFriends.length; ++i) {
+            sb.delete(0, sb.length());
+            for (int j = 0; j < areFriends[i].length; ++j) {
+                pad = highlight == i && j == seats[i] ? "*" : " ";
+                sb.append(pad).append(areFriends[i][j]? "T": "F").append(pad);
+            }
+            System.out.println(sb.toString());
+        }
+        System.out.println();
     }
 
 }

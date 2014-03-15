@@ -23,4 +23,21 @@ public class PicnicTest {
         Assert.assertEquals(0, main.countPairingCases());
     }
 
+    @Test
+    public void testSixFriendsOutOfFourStudents() throws Exception {
+        // 0 1
+        // 1 2
+        // 2 3
+        // 3 0
+        // 0 2
+        // 1 3
+        Main main = new Main(new boolean[][]{
+                {false, true, true, true},
+                {true, false, true, true},
+                {true, true, false, true},
+                {true, true, true, false},
+        });
+        Assert.assertEquals(3, main.countPairingCases());
+    }
+
 }
