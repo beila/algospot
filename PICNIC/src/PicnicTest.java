@@ -1,12 +1,12 @@
 import com.beila.testlib.Lib;
 import com.beila.testlib.StringArrayInputOutput;
-
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * http://algospot.com/judge/problem/read/PICNIC
@@ -110,6 +110,27 @@ public class PicnicTest {
                 "3",
                 "4",
         };
+        assertMain(input, output);
+    }
+
+    @Test
+    public void testBiggestPossibleCases() throws Exception {
+        String[] input = new String[101];
+        input[0] = "50";
+        for (int i = 1; i < input.length; i += 2) {
+            input[i] = "10 45";
+            input[i+1] = "0 1 0 2 0 3 0 4 0 5 0 6 0 7 0 8 0 9 " +
+                             "1 2 1 3 1 4 1 5 1 6 1 7 1 8 1 9 " +
+                                 "2 3 2 4 2 5 2 6 2 7 2 8 2 9 " +
+                                     "3 4 3 5 3 6 3 7 3 8 3 9 " +
+                                         "4 5 4 6 4 7 4 8 4 9 " +
+                                             "5 6 5 7 5 8 5 9 " +
+                                                 "6 7 6 8 6 9 " +
+                                                     "7 8 7 9 " +
+                                                         "8 9";
+        }
+        String[] output = new String[50];
+        Arrays.fill(output, "945");
         assertMain(input, output);
     }
 }
