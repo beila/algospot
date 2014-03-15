@@ -65,4 +65,21 @@ public class PicnicTest {
         Assert.assertEquals(4, main.countPairingCases());
     }
 
+    @Test
+    public void testBiggestSingleProblem() throws Exception {
+        Main main = new Main(new boolean[][]{
+                {t, t, t, t, t, t, t, t, t, t}, //0
+                {t, t, t, t, t, t, t, t, t, t}, //1
+                {t, t, t, t, t, t, t, t, t, t}, //2
+                {t, t, t, t, t, t, t, t, t, t}, //3
+                {t, t, t, t, t, t, t, t, t, t}, //4
+                {t, t, t, t, t, t, t, t, t, t}, //4
+                {t, t, t, t, t, t, t, t, t, t}, //6
+                {t, t, t, t, t, t, t, t, t, t}, //7
+                {t, t, t, t, t, t, t, t, t, t}, //8
+                {t, t, t, t, t, t, t, t, t, t}, //9
+        });
+        main.countPairingCases();
+    }
+
 }

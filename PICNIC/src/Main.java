@@ -11,37 +11,46 @@ public class Main {
     public Main(boolean[][] areFriends) {
         this.areFriends = areFriends;
         this.numPeople = areFriends.length;
+        for (int i = 0; i < areFriends.length; i++) {
+            areFriends[i][i] = false;
+        }
     }
 
     public int countPairingCases() {
         Set<Integer> people = new HashSet<>(numPeople);
+        Set<Integer> freeSeats = new HashSet<>(numPeople);
         int[] seats = new int[numPeople];
         for (int i = 0; i < numPeople; i++) {
             people.add(i);
+            freeSeats.add(i);
             seats[i] = -1;
         }
-        return countPairingCases(people, seats);
+        return countPairingCases(people, freeSeats, seats);
     }
 
-    private int countPairingCases(Set<Integer> people, int[] seats) {
-        if (people.size() <= 1) {
-            seats[0] = people.iterator().next();
-            return isValidPairs(seats)? 1: 0;
+    private int countPairingCases(Set<Integer> people, Set<Integer> freeSeats, int[] seats) {
+        if (people.size() <= 0) {
+            return checkValidPairs(seats)? 1: 0;
         }
 
         int sum = 0;
-        for (Integer p: people) {
-            seats[people.size() - 1] = p;
+        for (Integer person: people) {
+            int seat = freeSeats.iterator().next();
+            seats[seat] = person;
+            seats[person] = seat;
             Set<Integer> lessPeople = new HashSet<>(people);
-            lessPeople.remove(p);
-            sum += countPairingCases(lessPeople, seats);
+            lessPeople.remove(person);
+            lessPeople.remove(seat);
+            Set<Integer> lessFreeSeats = new HashSet<>(freeSeats);
+            lessFreeSeats.remove(person);
+            lessFreeSeats.remove(seat);
+            sum += countPairingCases(lessPeople, lessFreeSeats, seats);
         }
         return sum;
     }
 
-    private boolean isValidPairs(int[] seats) {
-        return checkPairedToMyself(seats)
-                && checkPairedToMany(seats)
+    private boolean checkValidPairs(int[] seats) {
+        return checkPairedToMany(seats)
                 && checkPairOfNonFriends(seats);
     }
 
@@ -55,13 +64,6 @@ public class Main {
     private boolean checkPairOfNonFriends(int[] seats) {
         for (int i = 0; i < seats.length; i++) {
             if (!areFriends[i][seats[i]]) return false;
-        }
-        return true;
-    }
-
-    private boolean checkPairedToMyself(int[] seats) {
-        for (int i = 0; i < seats.length; i++) {
-            if (seats[i] == i) return false;
         }
         return true;
     }
