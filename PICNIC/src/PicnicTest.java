@@ -12,7 +12,7 @@ public class PicnicTest {
     public Timeout globalTimeout = new Timeout(1000);
 
     @Test
-    public void testSuccess() throws Exception {
+    public void testAPairOfTwoFriends() throws Exception {
         Main main = new Main(new boolean[][]{{true, true}, {true, true}});
         Assert.assertEquals(1, main.countPairingCases());
     }
