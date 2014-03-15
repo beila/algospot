@@ -17,4 +17,10 @@ public class PicnicTest {
         Assert.assertEquals(1, main.countPairingCases());
     }
 
+    @Test
+    public void testAPairOfNonFriends() throws Exception {
+        Main main = new Main(new boolean[][]{{false, false}, {false, false}});
+        Assert.assertEquals(0, main.countPairingCases());
+    }
+
 }

@@ -24,7 +24,10 @@ public class Main {
     }
 
     private int countPairingCases(Set<Integer> people, int[] seats) {
-        if (people.size() <= 1) return isValidPairs(seats)? 1: 0;
+        if (people.size() <= 1) {
+            seats[0] = people.iterator().next();
+            return isValidPairs(seats)? 1: 0;
+        }
 
         int sum = 0;
         for (Integer p: people) {
@@ -39,6 +42,7 @@ public class Main {
     private boolean isValidPairs(int[] seats) {
         for (int i = 0; i < seats.length; i++) {
             if (seats[i] == i) return false;
+            if (!areFriends[i][seats[i]]) return false;
         }
         return true;
     }
