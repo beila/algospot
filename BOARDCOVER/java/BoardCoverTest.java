@@ -1,3 +1,4 @@
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -17,4 +18,11 @@ public class BoardCoverTest {
     public void testInit() throws Exception {
         new Main(new boolean[][]{{f, t}, {t, t}});
     }
+
+    @Test
+    public void testSimplest() throws Exception {
+        Main main = new Main(new boolean[][]{{f, t}, {t, t}});
+        Assert.assertEquals(1, main.countLayoutCases());
+    }
+
 }
