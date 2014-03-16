@@ -31,4 +31,16 @@ public class BoardCoverTest {
         Assert.assertEquals(0, main.countLayoutCases());
     }
 
+    @Test
+    public void testFourWalls() throws Exception {
+        Main main = new Main(new boolean[][]{{f, f}, {f, f}});
+        Assert.assertEquals(0, main.countLayoutCases());
+    }
+
+    @Test
+    public void testSixSlots() throws Exception {
+        Main main = new Main(new boolean[][]{{t, t, t}, {t, t, t}});
+        Assert.assertEquals(2, main.countLayoutCases());
+    }
+
 }
