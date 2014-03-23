@@ -1,18 +1,20 @@
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Scanner;
 
 /**
  * http://algospot.com/judge/problem/read/BOARDCOVER
  * Created by hojin.ghim on 3/15/14.
  */
 public class Main {
-    private final boolean[][] board;
+    private final boolean[][] slots;
 
-    public Main(boolean[][] board) {
-        this.board = board;
+    public Main(boolean[][] slots) {
+        this.slots = slots;
     }
-
     public int countLayoutCases() {
-        boolean[][] coveredBoard = cloneBoard(board);
+        boolean[][] coveredBoard = cloneBoard(slots);
         return countLayoutCasesOnSubBoard(coveredBoard, 0, 0);
     }
 
@@ -33,11 +35,11 @@ public class Main {
     }
 
     private int nextX(int x) {
-        return (x + 1) % (board.length - PART_WIDTH + 1);
+        return (x + 1) % (slots.length - PART_WIDTH + 1);
     }
 
     private int nextY(int y) {
-        return (y + 1) % (board[0].length - PART_HEIGHT + 1);
+        return (y + 1) % (slots[0].length - PART_HEIGHT + 1);
     }
 
     private boolean[][] cloneBoard(boolean[][] srcBoard) {
@@ -90,6 +92,29 @@ public class Main {
             for (int[] point: points) {
                 board[x+point[0]][y+point[1]] = true;
             }
+        }
+    }
+
+    public static void main(String[] args) {
+        main(System.in, System.out);
+    }
+
+    public static void main(InputStream inputStream, PrintStream printStream) {
+        Scanner scanner = new Scanner(inputStream);
+        final int numCases = scanner.nextInt();
+        for (int i = 0; i < numCases; i++) {
+            final int height = scanner.nextInt();
+            final int width = scanner.nextInt();
+            scanner.nextLine();
+            final boolean[][] slots = new boolean[width][height];
+            for (int j = 0; j < height; j++) {
+                char[] cells = scanner.nextLine().toCharArray();
+                for (int k = 0; k < width; k++) {
+                    slots[k][j] = '.' == cells[k];
+                }
+            }
+            final Main main = new Main(slots);
+            printStream.println(main.countLayoutCases());
         }
     }
 }

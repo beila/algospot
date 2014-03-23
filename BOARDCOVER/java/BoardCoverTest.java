@@ -1,7 +1,11 @@
+import com.beila.testlib.Lib;
+import com.beila.testlib.StringArrayInputOutput;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
+
+import java.io.IOException;
 
 /**
  * http://algospot.com/judge/problem/read/BOARDCOVER
@@ -41,6 +45,43 @@ public class BoardCoverTest {
     public void testSixSlots() throws Exception {
         Main main = new Main(new boolean[][]{{t, t, t}, {t, t, t}});
         Assert.assertEquals(2, main.countLayoutCases());
+    }
+
+    public static void assertMain(String[] input, String[] output) throws IOException {
+        try (StringArrayInputOutput io = new StringArrayInputOutput(input)) {
+            Main.main(io.getInputStream(), io.getPrintStream());
+            Lib.assertDeepEquals(output, io.toStringArray());
+        }
+    }
+
+    @Test
+    public void testMainFirstExample() throws Exception {
+        String[] input = new String[] {
+                "1",
+                "3 7",
+                "#.....#",
+                "#.....#",
+                "##...##",
+        };
+        String[] output = new String[] {
+                "0",
+        };
+        assertMain(input, output);
+    }
+
+    @Test
+    public void testMainSecondExample() throws Exception {
+        String[] input = new String[] {
+                "1",
+                "3 7",
+                "#.....#",
+                "#.....#",
+                "##..###",
+        };
+        String[] output = new String[] {
+                "2",
+        };
+        assertMain(input, output);
     }
 
 }
