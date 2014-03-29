@@ -21,10 +21,18 @@ public class Lib {
         return "";
     }
 
-    public static void assertDeepEquals(String[] expected, String[] actual) {
+    public static <T> void assertDeepEquals(T[] expected, T[] actual) {
         assertEquals(expected.length, actual.length);
         for (int i = 0; i < expected.length; ++i) {
             assertEquals(expected[i], actual[i]);
         }
     }
+
+    public static void assertDeepEquals(int[] expected, int[] actual) {
+        assertEquals(expected.length, actual.length);
+        for (int i = 0; i < expected.length; ++i) {
+            assertEquals(expected[i], actual[i]);
+        }
+    }
+
 }

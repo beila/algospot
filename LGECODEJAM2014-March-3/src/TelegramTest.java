@@ -1,3 +1,4 @@
+import com.beila.testlib.Lib;
 import org.junit.Test;
 
 /**
@@ -8,6 +9,14 @@ import org.junit.Test;
 public class TelegramTest {
     @Test
     public void testInit() throws Exception {
-        new Main(new String[]{"zebra", "bras", "ebbs"});
+        new Main().addMessages("zebra", "bras", "ebbs");
     }
+
+    @Test
+    public void testObvious() throws Exception {
+        Main main = new Main();
+        main.addMessages("zebra");
+        Lib.assertDeepEquals(new int[]{1}, main.essentialLength());
+    }
+
 }
