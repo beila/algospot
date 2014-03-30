@@ -19,4 +19,18 @@ public class TelegramTest {
         Lib.assertDeepEquals(new int[]{1}, main.essentialLength());
     }
 
+    @Test
+    public void testSecondObvious() throws Exception {
+        Main main = new Main();
+        main.addMessages("zebra", "bras");
+        Lib.assertDeepEquals(new int[]{1, 1}, main.essentialLength());
+    }
+
+    @Test
+    public void testThirdObvious() throws Exception {
+        Main main = new Main();
+        main.addMessages("zebra", "bras", "ebbs");
+        Lib.assertDeepEquals(new int[]{1, 2, 2}, main.essentialLength());
+    }
+
 }
