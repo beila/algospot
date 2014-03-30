@@ -1,3 +1,5 @@
+import com.sun.istack.internal.NotNull;
+
 import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -9,11 +11,7 @@ import java.util.stream.Stream;
  */
 public class Main {
     private final List<String> inputMessages = new ArrayList<>(1000);
-    private final List<Set<SubMessage>> subMessages = new ArrayList<Set<SubMessage>>(26) {{
-        for (int i = 0; i < 26; i++) {
-            add(new HashSet<>());
-        }
-    }};
+    private final Set<SubMessage> subStrings = new HashSet<>();
 
     public void addMessages(String... messages) {
         Arrays.stream(messages).forEachOrdered(this::addMessage);
@@ -21,8 +19,8 @@ public class Main {
 
     public void addMessage(String message) {
         inputMessages.add(message);
-        SubMessage.allSuffices(message)
-                .forEach(l -> subMessages.get(l.get(0) - 'a').add(l));
+        SubMessage.createSubMessage(message).allSuffices()
+                .forEach(subStrings::add);
     }
 
     public int[] essentialLength() {
@@ -30,39 +28,54 @@ public class Main {
     }
 
     public int essentialLength(String message) {
-        return SubMessage.allSuffices(message)
-                .map(suffix ->
+        return SubMessage.createSubMessage(message).allSuffices()
+                .mapToInt(suffix ->
                                 suffix.allPrefixes()
-                                        .filter(subMessage -> !subMessages.get(subMessage.get(0) - 'a').contains(subMessage))
+                                        .filter(ss -> !subStrings.contains(ss))
                                         .findFirst()
                                         .map(SubMessage::size).orElse(Integer.MAX_VALUE)
                 )
-                .min(Integer::compareTo).orElse(Integer.MAX_VALUE);
+                .min().orElse(Integer.MAX_VALUE);
     }
 
     interface SubMessage extends List<Character>{
-        static Stream<SubMessage> allSuffices(String message) {
-            SubMessage sm = new SubMessageImpl(message);
-            return IntStream.range(0, message.length())
-                    .mapToObj(i -> sm.subList(i, sm.size()))
+        default Stream<SubMessage> allSuffices() {
+            return IntStream.range(0, size())
+                    .mapToObj(i -> subList(i, size()))
                     .map(subList -> (SubMessage) subList);
         }
 
         default Stream<SubMessage> allPrefixes() {
-            return IntStream.range(0, size())
+            return IntStream.range(1, size())
                     .mapToObj(i -> subList(0, i))
                     .map(subList -> (SubMessage) subList);
         }
+
+        static SubMessage createSubMessage(String message) {
+            return new LinkedSubMessage(message);
+        }
     }
 
-    static private class SubMessageImpl extends LinkedList<Character> implements SubMessage {
+    static private class LinkedSubMessage extends AbstractSequentialList<Character> implements SubMessage {
+        private final List<Character> characters;
+
+        public LinkedSubMessage(List<Character> characters) {
+            this.characters = characters;
+        }
+
+        public LinkedSubMessage(String message) {
+            this(new LinkedList<Character>() {{
+                for (Character c: message.toCharArray()) add(c);
+            }});
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             if (!super.equals(o)) return false;
 
-            SubMessageImpl that = (SubMessageImpl) o;
+            LinkedSubMessage that = (LinkedSubMessage) o;
 
             if (size() != that.size()) return false;
 
@@ -80,8 +93,19 @@ public class Main {
                     .reduce(super.hashCode(), (left, right) -> 31 * left + right);
         }
 
-        public SubMessageImpl(String message) {
-            for(Character c: message.toCharArray()) add(c);
+        @Override @NotNull
+        public SubMessage subList(int fromIndex, int toIndex) {
+            return new LinkedSubMessage(super.subList(fromIndex, toIndex));
+        }
+
+        @Override @NotNull
+        public ListIterator<Character> listIterator(int index) {
+            return characters.listIterator(index);
+        }
+
+        @Override
+        public int size() {
+            return characters.size();
         }
 
     }
