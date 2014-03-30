@@ -14,13 +14,14 @@ public class Main {
     private final Set<SubMessage> subStrings = new HashSet<>();
 
     public void addMessages(String... messages) {
-        Arrays.stream(messages).forEachOrdered(this::addMessage);
+        inputMessages.addAll(Arrays.asList(messages));
+        Arrays.stream(messages).forEach(this::addSubMessages);
     }
 
-    public void addMessage(String message) {
-        inputMessages.add(message);
+    public void addSubMessages(String message) {
         SubMessage.createSubMessage(message).allSuffices()
-                .forEach(subStrings::add);
+                .flatMap(SubMessage::allPrefixes)
+                .forEach(prefix -> subStrings.add((SubMessage) prefix));
     }
 
     public int[] essentialLength() {
@@ -29,13 +30,15 @@ public class Main {
 
     public int essentialLength(String message) {
         return SubMessage.createSubMessage(message).allSuffices()
-                .mapToInt(suffix ->
-                                suffix.allPrefixes()
-                                        .filter(ss -> !subStrings.contains(ss))
-                                        .findFirst()
-                                        .map(SubMessage::size).orElse(Integer.MAX_VALUE)
-                )
+                .mapToInt(this::minEssentialPrefixLength)
                 .min().orElse(Integer.MAX_VALUE);
+    }
+
+    private int minEssentialPrefixLength(SubMessage message) {
+        return message.allPrefixes()
+                .filter(ss -> !subStrings.contains(ss))
+                .findFirst()
+                .map(SubMessage::size).orElse(Integer.MAX_VALUE);
     }
 
     interface SubMessage extends List<Character>{
@@ -46,7 +49,7 @@ public class Main {
         }
 
         default Stream<SubMessage> allPrefixes() {
-            return IntStream.range(1, size())
+            return IntStream.rangeClosed(1, size())
                     .mapToObj(i -> subList(0, i))
                     .map(subList -> (SubMessage) subList);
         }
@@ -88,9 +91,7 @@ public class Main {
 
         @Override
         public int hashCode() {
-            return stream()
-                    .mapToInt(value -> (int) value)
-                    .reduce(super.hashCode(), (left, right) -> 31 * left + right);
+            return characters.hashCode();
         }
 
         @Override @NotNull
