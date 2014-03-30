@@ -1,5 +1,5 @@
 import java.util.*;
-import java.util.function.*;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -32,43 +32,26 @@ public class Main {
     public int essentialLength(String message) {
         return SubMessage.allSuffices(message)
                 .map(suffix ->
-                                suffix.allPrefices()
-                                        .filter(new Predicate<SubMessage>() {
-                                            @Override
-                                            public boolean test(SubMessage subMessage) {
-
-                                            }
-                                        })
+                                suffix.allPrefixes()
+                                        .filter(subMessage -> !subMessages.get(subMessage.get(0) - 'a').contains(subMessage))
                                         .findFirst()
                                         .map(SubMessage::size).orElse(Integer.MAX_VALUE)
                 )
                 .min(Integer::compareTo).orElse(Integer.MAX_VALUE);
     }
 
-    static Stream<Character> toCharacterStream(String string) {
-        List<Character> characterList = new ArrayList<>(string.length());
-        for (int i = 0; i < string.length(); i++) {
-            characterList.add(string.charAt(i));
-        }
-        return characterList.stream();
-    }
-
     interface SubMessage extends List<Character>{
         static Stream<SubMessage> allSuffices(String message) {
             SubMessage sm = new SubMessageImpl(message);
-            List<SubMessage> list = new ArrayList<>(sm.size());
-            for (int i = 0; i < sm.size(); i++) {
-                list.add((SubMessage) sm.subList(i, sm.size()));
-            }
-            return list.stream();
+            return IntStream.range(0, message.length())
+                    .mapToObj(i -> sm.subList(i, sm.size()))
+                    .map(subList -> (SubMessage) subList);
         }
 
-        default Stream<SubMessage> allPrefices() {
-            List<SubMessage> list = new ArrayList<>(size());
-            for (int i = 1; i <= size(); i++) {
-                list.add((SubMessage) subList(0, i));
-            }
-            return list.stream();
+        default Stream<SubMessage> allPrefixes() {
+            return IntStream.range(0, size())
+                    .mapToObj(i -> subList(0, i))
+                    .map(subList -> (SubMessage) subList);
         }
     }
 
@@ -84,7 +67,7 @@ public class Main {
             if (size() != that.size()) return false;
 
             for (int i = 0; i < size(); i++) {
-                if (get(i).equals(that.get(i))) return false;
+                if (!get(i).equals(that.get(i))) return false;
             }
 
             return true;
