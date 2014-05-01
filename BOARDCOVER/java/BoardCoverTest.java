@@ -1,6 +1,5 @@
 import com.beila.testlib.Lib;
 import com.beila.testlib.StringArrayInputOutput;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -12,9 +11,9 @@ import java.io.IOException;
  * Created by hojin.ghim on 3/15/14.
  */
 public class BoardCoverTest {
-    @Rule
-    public Timeout globalTimeout = new Timeout(2000);
+    @Rule public Timeout globalTimeout = new Timeout(2000);
 
+/*
     static final private boolean t = true;
     static final private boolean f = false;
 
@@ -46,6 +45,7 @@ public class BoardCoverTest {
         Main main = new Main(new boolean[][]{{t, t, t}, {t, t, t}});
         Assert.assertEquals(2, main.countLayoutCases());
     }
+*/
 
     public static void assertMain(String[] input, String[] output) throws IOException {
         try (StringArrayInputOutput io = new StringArrayInputOutput(input)) {
@@ -81,6 +81,60 @@ public class BoardCoverTest {
         String[] output = new String[] {
                 "2",
         };
+        assertMain(input, output);
+    }
+
+    @Test
+    public void testMainThirdExample() throws Exception {
+        String[] input = new String[] {
+                "1",
+                "8 10",
+                "##########",
+                "#........#",
+                "#........#",
+                "#........#",
+                "#........#",
+                "#........#",
+                "#........#",
+                "##########"
+        };
+        String[] output = new String[] {
+                "1514",
+        };
+        Main.debug = false;
+        assertMain(input, output);
+    }
+
+    @Test
+    public void testMainLargestSingleExample() throws Exception {
+        String[] input = new String[] {
+                "1",
+                "20 20",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+        };
+        String[] output = new String[] {
+                "1514",
+        };
+        Main.debug = false;
         assertMain(input, output);
     }
 
