@@ -1,6 +1,10 @@
+import com.sun.istack.internal.NotNull;
+
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.*;
+
+import static java.lang.Math.max;
 
 /**
  * http://algospot.com/judge/problem/read/BOARDCOVER
@@ -16,6 +20,7 @@ public class Main {
 
     public int countLayoutCases() {
         List<Point> coverablePoints = coverablePoints(slots);
+        if (coverablePoints.isEmpty()) return 0;
         if (debug) {
             System.err.println(String.format("width=%d,height=%d now", slots[0].length-1, slots.length-1));
             for (Point p: coverablePoints) System.err.println(p.toString());
@@ -42,16 +47,16 @@ public class Main {
             sum += countLayoutCasesOnSubBoard(coveredBoard, tail);
             part.uncover(coveredBoard, head);
         }
-/*
-TODO no trial after this from BoardCoverTest.testMainSecondExample
-x=2,y=0 after: true
-####..###
-####..###
-##..#####
-#########
-#########
-        */
+
+        if (isPointCovered(coveredBoard, head)) {
+            sum += countLayoutCasesOnSubBoard(coveredBoard, tail);
+        }
+
         return sum;
+    }
+
+    private boolean isPointCovered(boolean[][] coveredBoard, Point p) {
+        return !coveredBoard[p.y][p.x];
     }
 
     static private boolean[][] surroundBoard(boolean[][] srcBoard) {
@@ -64,13 +69,19 @@ x=2,y=0 after: true
     }
 
     static private List<Point> coverablePoints(boolean[][] slots) {
-        List<Point> pointList = new ArrayList<>();
+        Set<Point> pointSet = new LinkedHashSet<>();
         for (int i = 0; i < slots.length - 1; i++) {
             for (int j = 0; j < slots[i].length - 1; j++) {
-                if (slots[i][j]) pointList.add(new Point(j, i));
+                if (!slots[i][j]) continue;
+                pointSet.add(new Point(j, i));
+                pointSet.add(new Point(max(j - 1, 0), i));
+                pointSet.add(new Point(j, max(i - 1, 0)));
+                pointSet.add(new Point(max(j - 1, 0), max(i - 1, 0)));
             }
         }
-        return pointList;
+        final ArrayList<Point> pointsList = new ArrayList<>(pointSet);
+        pointsList.sort(null);
+        return pointsList;
     }
 
     private boolean allCovered(boolean[][] coveredBoard) {
@@ -99,7 +110,7 @@ x=2,y=0 after: true
         printBoard(board);
     }
 
-    static class Point {
+    static class Point implements Comparable<Point> {
         Point(int x, int y) {
             this.x = x;
             this.y = y;
@@ -114,6 +125,30 @@ x=2,y=0 after: true
                     "x=" + x +
                     ", y=" + y +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Point point = (Point) o;
+
+            return x == point.x && y == point.y;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = x;
+            result = 31 * result + y;
+            return result;
+        }
+
+        @Override
+        public int compareTo(@NotNull Point o) {
+            // NOTE board size should not be over 31
+            return hashCode() - o.hashCode();
         }
     }
 
