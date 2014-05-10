@@ -13,39 +13,61 @@ import java.io.IOException;
 public class BoardCoverTest {
     @Rule public Timeout globalTimeout = new Timeout(2000);
 
-/*
-    static final private boolean t = true;
-    static final private boolean f = false;
-
-    @Test
-    public void testInit() throws Exception {
-        new Main(new boolean[][]{{f, t}, {t, t}});
-    }
-
     @Test
     public void testSimplest() throws Exception {
-        Main main = new Main(new boolean[][]{{f, t}, {t, t}});
-        Assert.assertEquals(1, main.countLayoutCases());
+        String[] input = new String[] {
+                "1",
+                "2 2",
+                "#.",
+                "..",
+        };
+        String[] output = new String[] {
+                "1",
+        };
+        assertMain(input, output);
     }
 
     @Test
     public void testFourSlots() throws Exception {
-        Main main = new Main(new boolean[][]{{t, t}, {t, t}});
-        Assert.assertEquals(0, main.countLayoutCases());
+        String[] input = new String[] {
+                "1",
+                "2 2",
+                "..",
+                "..",
+        };
+        String[] output = new String[] {
+                "0",
+        };
+        assertMain(input, output);
     }
 
     @Test
     public void testFourWalls() throws Exception {
-        Main main = new Main(new boolean[][]{{f, f}, {f, f}});
-        Assert.assertEquals(0, main.countLayoutCases());
+        String[] input = new String[] {
+                "1",
+                "2 2",
+                "##",
+                "##",
+        };
+        String[] output = new String[] {
+                "0",
+        };
+        assertMain(input, output);
     }
 
     @Test
     public void testSixSlots() throws Exception {
-        Main main = new Main(new boolean[][]{{t, t, t}, {t, t, t}});
-        Assert.assertEquals(2, main.countLayoutCases());
+        String[] input = new String[] {
+                "1",
+                "2 3",
+                "...",
+                "...",
+        };
+        String[] output = new String[] {
+                "2",
+        };
+        assertMain(input, output);
     }
-*/
 
     public static void assertMain(String[] input, String[] output) throws IOException {
         try (StringArrayInputOutput io = new StringArrayInputOutput(input)) {
