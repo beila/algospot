@@ -49,6 +49,23 @@ public class Hanoi4Test {
     }
 
     @Test
+    public void testTwoDiscsOnTwoPoles() throws Exception {
+        String[] input = new String[] {
+                "1",
+                "2",
+                "0",
+                "0",
+                "1 1",
+                "1 2",
+        };
+        String[] output = new String[] {
+                "1",
+        };
+        assertMain(input, output);
+    }
+
+/*
+    @Test
     public void testFirstExample() throws Exception {
         String[] input = new String[] {
                 "1",
@@ -63,5 +80,6 @@ public class Hanoi4Test {
         };
         assertMain(input, output);
     }
+*/
 
 }

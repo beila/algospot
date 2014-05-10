@@ -26,17 +26,19 @@ public class Main {
             for (int j = 0; j < 4; j++) {
                 final int numDisc = scanner.nextInt();
                 for (int k = 0; k < numDisc; k++) {
-                    assert main.poles[j].placeDisc(Disc.get(scanner.nextInt()));
+                    assert -1 != main.poles[j].placeDisc(Disc.get(scanner.nextInt()));
                 }
             }
-            main.print(System.err);
+            main.print();
             printStream.println(main.moveDiscToLastPole());
         }
     }
 
+    private Pole lastPole;
     Pole[] poles; {
         Map<Disc, Pole> p = new HashMap<>();
-        poles = new Pole[]{new Pole(0, p), new Pole(1, p), new Pole(2, p), new Pole(3, p)};
+        lastPole = new Pole(3, p);
+        poles = new Pole[]{new Pole(0, p), new Pole(1, p), new Pole(2, p), lastPole};
     }
 
     private Disc largestDisc;
@@ -50,17 +52,21 @@ public class Main {
         return moveDiscToLastPole(largestDisc);
     }
 
-    private int moveDiscToLastPole(Disc largestDisc) {
-        return -1;
+    private int moveDiscToLastPole(Disc disc) {
+        if (disc.none()) return 0;
+        disc.print();
+        int movement = lastPole.placeDisc(disc);
+        print();
+        return moveDiscToLastPole(disc.justSmaller()) + movement;
     }
 
     private boolean allMoved() {
         return Arrays.stream(poles).limit(poles.length - 1).allMatch(Pole::isEmpty);
     }
 
-    private void print(PrintStream ps) {
+    private void print() {
         if (!Main.debug) return;
-        Arrays.stream(poles).forEach(ps::println);
+        Arrays.stream(poles).forEach(System.err::println);
     }
 
     private static class Pole {
@@ -72,10 +78,12 @@ public class Main {
             this.discPoleMap = discPoleMap;
         }
 
-        public boolean placeDisc(Disc disc) {
-            if (getDiscs().min(Comparator.<Disc>naturalOrder()).orElse(Disc.D13).compareTo(disc) <= 0) return false;
+        public int placeDisc(Disc disc) {
+            Disc currentMinDisc = getDiscs().min(Comparator.<Disc>naturalOrder()).orElse(Disc.D13);
+            if (disc.equals(currentMinDisc)) return 0;
+            if (disc.compareTo(currentMinDisc) > 0) return -1;
             discPoleMap.put(disc, this);
-            return true;
+            return 1;
         }
 
         private Stream<Disc> getDiscs() {
@@ -98,15 +106,28 @@ public class Main {
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     private enum Disc {
         D00, // boundary
         D01, D02, D03, D04, D05, D06, D07, D08, D09, D10, D11, D12,
         D13; // boundary
 
         public static Disc get(int i) {
-            assert i > 0;
+            assert i >= 0;
             assert i < Disc.values().length - 1;
             return Disc.values()[i];
+        }
+
+        public Disc justSmaller() {
+            return Disc.get(ordinal() - 1);
+        }
+
+        public boolean none() {
+            return equals(D00);
+        }
+
+        void print() {
+            if (debug) System.err.println(this);
         }
     }
 }
