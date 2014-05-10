@@ -136,6 +136,7 @@ public class Main {
 
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     static enum RelativePoint {
         A(-1,-1), B(0,-1), C(1,-1),
         E(-1,0),  F(0,0),  G(1,0),
@@ -154,18 +155,19 @@ public class Main {
     }
 
     static enum Cover {
-        A(RelativePoint.A, RelativePoint.B, RelativePoint.F),
-        B(RelativePoint.C, RelativePoint.G, RelativePoint.F),
+//        A(RelativePoint.A, RelativePoint.B, RelativePoint.F),
+//        B(RelativePoint.C, RelativePoint.G, RelativePoint.F),
         C(RelativePoint.J, RelativePoint.I, RelativePoint.F),
-        D(RelativePoint.H, RelativePoint.E, RelativePoint.F),
-        E(RelativePoint.C, RelativePoint.B, RelativePoint.F),
-        F(RelativePoint.A, RelativePoint.E, RelativePoint.F),
-        G(RelativePoint.H, RelativePoint.I, RelativePoint.F),
+//        D(RelativePoint.H, RelativePoint.E, RelativePoint.F),
+//        E(RelativePoint.C, RelativePoint.B, RelativePoint.F),
+//        F(RelativePoint.A, RelativePoint.E, RelativePoint.F),
+//        G(RelativePoint.H, RelativePoint.I, RelativePoint.F),
         H(RelativePoint.J, RelativePoint.G, RelativePoint.F),
-        I(RelativePoint.B, RelativePoint.F, RelativePoint.E),
-        J(RelativePoint.G, RelativePoint.F, RelativePoint.B),
+//        I(RelativePoint.B, RelativePoint.F, RelativePoint.E),
+//        J(RelativePoint.G, RelativePoint.F, RelativePoint.B),
         K(RelativePoint.I, RelativePoint.F, RelativePoint.G),
-        L(RelativePoint.E, RelativePoint.F, RelativePoint.I),
+//        L(RelativePoint.E, RelativePoint.F, RelativePoint.I),
+        M(RelativePoint.I, RelativePoint.F, RelativePoint.H),
         ;
 
         RelativePoint[] relativePoints;
