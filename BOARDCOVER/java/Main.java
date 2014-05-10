@@ -28,11 +28,6 @@ public class Main {
             sum += countLayoutCasesOnSubBoard(board, i + 1);
             board.uncoverAt(point, cover);
         }
-
-        if (board.openAt(point)) {
-            sum += countLayoutCasesOnSubBoard(board, i + 1);
-        }
-
         return sum;
     }
 
@@ -65,12 +60,14 @@ public class Main {
         private final int x;
         private final int y;
 
-        Point(int x, int y) {
+        Point(int y, int x) {
             this.x = x;
             this.y = y;
         }
 
         static Point get(int x, int y) {
+            assert SIDE_LENGTH_BOUND > x;
+            assert SIDE_LENGTH_BOUND > y;
             return Point.values()[y * SIDE_LENGTH_BOUND + x];
         }
 
@@ -87,10 +84,6 @@ public class Main {
 
         boolean coverableWith(Point p) {
             return covered.get(p.ordinal());
-        }
-
-        boolean openAt(Point p) {
-            return !coverableWith(p);
         }
 
         void coverWith(Point p) {
@@ -168,7 +161,12 @@ public class Main {
         E(RelativePoint.C, RelativePoint.B, RelativePoint.F),
         F(RelativePoint.A, RelativePoint.E, RelativePoint.F),
         G(RelativePoint.H, RelativePoint.I, RelativePoint.F),
-        H(RelativePoint.J, RelativePoint.G, RelativePoint.F);
+        H(RelativePoint.J, RelativePoint.G, RelativePoint.F),
+        I(RelativePoint.B, RelativePoint.F, RelativePoint.E),
+        J(RelativePoint.G, RelativePoint.F, RelativePoint.B),
+        K(RelativePoint.I, RelativePoint.F, RelativePoint.G),
+        L(RelativePoint.E, RelativePoint.F, RelativePoint.I),
+        ;
 
         RelativePoint[] relativePoints;
         Cover(RelativePoint... points) {
