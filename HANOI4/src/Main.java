@@ -1,8 +1,8 @@
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.stream.IntStream;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * http://algospot.com/judge/problem/read/HANOI4
@@ -21,20 +21,42 @@ public class Main {
         Scanner scanner = new Scanner(inputStream);
         final int numCases = scanner.nextInt(); // C <= 50
         for (int i = 0; i < numCases; i++) {
-            @SuppressWarnings("UnusedDeclaration") final int totalDisc = scanner.nextInt();  // N <= 12
-            Main main = new Main();
+            final int totalDisc = scanner.nextInt();  // N <= 12
+            Main main = new Main(Disc.get(totalDisc));
             for (int j = 0; j < 4; j++) {
                 final int numDisc = scanner.nextInt();
                 for (int k = 0; k < numDisc; k++) {
-                    main.poles[j].addDisc(Disc.get(scanner.nextInt() - 1));
+                    assert main.poles[j].placeDisc(Disc.get(scanner.nextInt()));
                 }
             }
             main.print(System.err);
-            printStream.println("result");
+            printStream.println(main.moveDiscToLastPole());
         }
     }
 
-    Pole[] poles = new Pole[] {new Pole(0), new Pole(1), new Pole(2), new Pole(3)};
+    Pole[] poles; {
+        Map<Disc, Pole> p = new HashMap<>();
+        poles = new Pole[]{new Pole(0, p), new Pole(1, p), new Pole(2, p), new Pole(3, p)};
+    }
+
+    private Disc largestDisc;
+
+    public Main(Disc largestDisc) {
+        this.largestDisc = largestDisc;
+    }
+
+    int moveDiscToLastPole() {
+        if (allMoved()) return 0;
+        return moveDiscToLastPole(largestDisc);
+    }
+
+    private int moveDiscToLastPole(Disc largestDisc) {
+        return -1;
+    }
+
+    private boolean allMoved() {
+        return Arrays.stream(poles).limit(poles.length - 1).allMatch(Pole::isEmpty);
+    }
 
     private void print(PrintStream ps) {
         if (!Main.debug) return;
@@ -43,34 +65,47 @@ public class Main {
 
     private static class Pole {
         private final int id;
+        private final Map<Disc, Pole> discPoleMap;
 
-        boolean[] possession = new boolean[Disc.values().length];
-        public Pole(int id) {
+        public Pole(int id, Map<Disc, Pole> discPoleMap) {
             this.id = id;
+            this.discPoleMap = discPoleMap;
         }
 
-        public void addDisc(Disc disc) {
-            // TODO constraint
-            possession[disc.ordinal()] = true;
+        public boolean placeDisc(Disc disc) {
+            if (getDiscs().min(Comparator.<Disc>naturalOrder()).orElse(Disc.D13).compareTo(disc) <= 0) return false;
+            discPoleMap.put(disc, this);
+            return true;
+        }
+
+        private Stream<Disc> getDiscs() {
+            return discPoleMap.entrySet().stream()
+                    .filter(e -> equals(e.getValue()))
+                    .map(Map.Entry::getKey);
         }
 
         @Override
         public String toString() {
             return "Pole{" + "id=" + id + ", possession="
-                    + IntStream.range(0, possession.length)
-                    .filter(i -> possession[i])
-                    .map(i -> i + 1)
-                    .mapToObj(Integer::toString)
-                    .reduce((s, s2) -> s + ", " + s2).get()
+                    + getDiscs().sorted(Comparator.<Disc>reverseOrder())
+                    .map((Function<Disc, String>) Disc::toString)
+                    .reduce((s1, s2) -> s1 + ", " + s2).orElse("-")
                     + '}';
         }
 
+        public boolean isEmpty() {
+            return getDiscs().count() == 0L;
+        }
     }
 
     private enum Disc {
-        D01, D02, D03, D04, D05, D06, D07, D08, D09, D10, D11, D12;
+        D00, // boundary
+        D01, D02, D03, D04, D05, D06, D07, D08, D09, D10, D11, D12,
+        D13; // boundary
 
         public static Disc get(int i) {
+            assert i > 0;
+            assert i < Disc.values().length - 1;
             return Disc.values()[i];
         }
     }

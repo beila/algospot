@@ -17,6 +17,38 @@ public class Hanoi4Test {
     }
 
     @Test
+    public void testSimplest() throws Exception {
+        String[] input = new String[] {
+                "1",
+                "1",
+                "0",
+                "0",
+                "0",
+                "1 1",
+        };
+        String[] output = new String[] {
+                "0",
+        };
+        assertMain(input, output);
+    }
+
+    @Test
+    public void testOneDisc() throws Exception {
+        String[] input = new String[] {
+                "1",
+                "1",
+                "0",
+                "0",
+                "1 1",
+                "0",
+        };
+        String[] output = new String[] {
+                "1",
+        };
+        assertMain(input, output);
+    }
+
+    @Test
     public void testFirstExample() throws Exception {
         String[] input = new String[] {
                 "1",
