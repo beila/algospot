@@ -9,3 +9,9 @@
 .idea
 *.iml
 *~
+/testLib/nbproject/private/
+/testLib/dist/
+/testLib/build/
+/BOARDCOVER/nbproject/private/
+/BOARDCOVER/build/
+/BOARDCOVER/dist/
