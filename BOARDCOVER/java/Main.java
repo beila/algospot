@@ -21,12 +21,14 @@ public class Main {
         if (i < 0) return board.allCovered()? 1: 0;
 
         Point point = Point.get(i);
+        Point[] coverPoints = new Point[Cover.size];
         int sum = 0;
         for (Cover cover: Cover.values()) {
-            if (!board.coverableAt(point, cover)) continue;
-            board.coverAt(point, cover);
+            cover.fillCoverPoints(point, coverPoints);
+            if (!board.coverableWith(coverPoints)) continue;
+            board.coverWith(coverPoints);
             sum += countLayoutCasesOnSubBoard(board, i + 1);
-            board.uncoverAt(point, cover);
+            board.uncoverWith(coverPoints);
         }
         return sum;
     }
@@ -56,7 +58,7 @@ public class Main {
         P2000(20,0), P2001(20,1), P2002(20,2), P2003(20,3), P2004(20,4), P2005(20,5), P2006(20,6), P2007(20,7), P2008(20,8), P2009(20,9), P2010(20,10), P2011(20,11), P2012(20,12), P2013(20,13), P2014(20,14), P2015(20,15), P2016(20,16), P2017(20,17), P2018(20,18), P2019(20,19), P2020(20,20), P2021(20,21),
         P2100(21,0), P2101(21,1), P2102(21,2), P2103(21,3), P2104(21,4), P2105(21,5), P2106(21,6), P2107(21,7), P2108(21,8), P2109(21,9), P2110(21,10), P2111(21,11), P2112(21,12), P2113(21,13), P2114(21,14), P2115(21,15), P2116(21,16), P2117(21,17), P2118(21,18), P2119(21,19), P2120(21,20), P2121(21,21),
         ;
-        static private int SIDE_LENGTH_BOUND = 22;
+        private static final int SIDE_LENGTH_BOUND = 22;
         private final int x;
         private final int y;
 
@@ -65,14 +67,16 @@ public class Main {
             this.y = y;
         }
 
+        static final Point[] pointValues = Point.values();
+        static final int numPoints = pointValues.length;
         static Point get(int x, int y) {
             assert SIDE_LENGTH_BOUND > x;
             assert SIDE_LENGTH_BOUND > y;
-            return Point.values()[y * SIDE_LENGTH_BOUND + x];
+            return pointValues[y * SIDE_LENGTH_BOUND + x];
         }
 
         static Point get(int i) {
-            return Point.values()[i];
+            return pointValues[i];
         }
     }
 
@@ -80,30 +84,25 @@ public class Main {
         // false if already covered
         // true if available
         // BitSet initializes with all false
-        BitSet covered = new BitSet(Point.values().length);
+        BitSet covered = new BitSet(Point.numPoints);
 
-        boolean coverableWith(Point p) {
-            return covered.get(p.ordinal());
+        boolean coverableWith(Point... points) {
+            for (Point p: points) {
+                if (!covered.get(p.ordinal())) return false;
+            }
+            return true;
         }
 
-        void coverWith(Point p) {
-            covered.clear(p.ordinal());
+        void coverWith(Point... points) {
+            for (Point p: points) {
+                covered.clear(p.ordinal());
+            }
         }
 
-        void uncoverWith(Point p) {
-            covered.set(p.ordinal());
-        }
-
-        boolean coverableAt(Point p, Cover cover) {
-            return cover.coverable(this, p);
-        }
-
-        void coverAt(Point p, Cover c) {
-            c.cover(this, p);
-        }
-
-        void uncoverAt(Point p, Cover c) {
-            c.uncover(this, p);
+        void uncoverWith(Point... points) {
+            for (Point p: points) {
+                covered.set(p.ordinal());
+            }
         }
 
         boolean allCovered() {
@@ -171,27 +170,16 @@ public class Main {
         ;
 
         RelativePoint[] relativePoints;
+        static final int size = 3;
         Cover(RelativePoint... points) {
             relativePoints = points;
         }
 
-        void cover(Board b, Point p) {
-            for (RelativePoint rp: relativePoints) {
-                b.coverWith(rp.getPoint(p));
+        private void fillCoverPoints(Point point, Point... coverPoints) {
+            assert coverPoints.length == relativePoints.length;
+            for (int i = 0; i < coverPoints.length; ++i) {
+                coverPoints[i] = relativePoints[i].getPoint(point);
             }
-        }
-
-        void uncover(Board b, Point p) {
-            for (RelativePoint rp: relativePoints) {
-                b.uncoverWith(rp.getPoint(p));
-            }
-        }
-
-        public boolean coverable(Board b, Point p) {
-            for (RelativePoint rp: relativePoints) {
-                if (!b.coverableWith(rp.getPoint(p))) return false;
-            }
-            return true;
         }
     }
 
