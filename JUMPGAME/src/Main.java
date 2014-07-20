@@ -10,6 +10,14 @@ import java.util.Scanner;
 public abstract class Main {
     abstract boolean jumpGame(int[][] board);
 
+    boolean isTerminal(int[][] board, int i, int j) {
+        return i >= board.length || j >= board[0].length || (i == board.length - 1 && j == board[0].length - 1);
+    }
+
+    boolean getVerdict(int[][] board, int i, int j) {
+        return !(i >= board.length || j >= board[0].length) && i == board.length - 1 && j == board[0].length - 1;
+    }
+
     static public void main(String[] args) {
         main(new MemoizedJumpGame(), System.in, System.out);
     }
@@ -37,8 +45,7 @@ public abstract class Main {
         }
 
         boolean jumpGame(int[][] board, int i, int j) {
-            if (i >= board.length || j >= board[0].length) return false;
-            if (i == board.length - 1 && j == board[0].length - 1) return true;
+            if (isTerminal(board, i, j)) return getVerdict(board, i, j);
 
             int steps = board[i][j];
             return jumpGame(board, i, j + steps) || jumpGame(board, i + steps, j);
@@ -66,14 +73,6 @@ public abstract class Main {
                 setCache(i, j, result);
             }
             return getCache(i, j);
-        }
-
-        boolean getVerdict(int[][] board, int i, int j) {
-            return !(i >= board.length || j >= board[0].length) && i == board.length - 1 && j == board[0].length - 1;
-        }
-
-        boolean isTerminal(int[][] board, int i, int j) {
-            return i >= board.length || j >= board[0].length || (i == board.length - 1 && j == board[0].length - 1);
         }
 
         private int[][] board;
