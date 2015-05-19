@@ -17,3 +17,6 @@ include 'services:webservice'
 */
 
 rootProject.name = 'algospot'
+
+include ':testLib'
+include ':LGECODEJAM2014-March-3'
